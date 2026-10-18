@@ -36,6 +36,12 @@ public class ProductServiceDbImpl implements ProductService{
             Category newCategory = new Category();
             newCategory.setName(product.getCategory().getName());
             Category savedCategory = categoryRepository.save(newCategory);
+
+            // when cascade PERSIST is present in Product, it will save the category present in product,
+            // while saving the product, if that category has id null.
+            // Hence commented the above line.
+            // we usually avoid cascade, so that in case of any issue, user can debug it and logic is written
+            //Category savedCategory = newCategory;
             product.setCategory(savedCategory);
         }
         return productRepository.save(product);
@@ -43,12 +49,17 @@ public class ProductServiceDbImpl implements ProductService{
 
     @Override
     public Product getSingleProduct(Long id) {
-        return null;
+
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("Product not found with id " + id);
+        }
+        return product.get();
     }
 
     @Override
     public void deleteProduct(Long id) {
-
+        productRepository.deleteById(id);
     }
 
     @Override
