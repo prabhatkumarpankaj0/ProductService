@@ -19,4 +19,5 @@ public class Category extends BaseModel {
     private List<Product> featuredProducts;
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Product> products;
+    private Integer countOfProducts;
 }
